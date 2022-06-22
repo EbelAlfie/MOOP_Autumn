@@ -14,6 +14,7 @@
         android:layout_centerHorizontal="true"
         android:backgroundTint="@color/white"
         android:layout_marginTop="1dp"
+        android:fontFamily="sans-serif-condensed-medium"
         android:alpha=".7"
         android:text="Location"
         android:textColor="@color/black"/>
@@ -50,6 +51,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
             android:text="Weather"
+            android:fontFamily="sans-serif-condensed-medium"
             android:textAlignment="center"
             android:textColor="@color/black" />
     </LinearLayout>
@@ -79,6 +81,7 @@
             android:id="@+id/img_temperature"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:fontFamily="sans-serif-condensed-medium"
             app:srcCompat="@drawable/temp" />
 
         <TextView
@@ -86,6 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
+            android:fontFamily="sans-serif-condensed-medium"
             android:text="Temperature"
             android:textAlignment="center"
             android:textColor="@color/black" />
@@ -114,6 +118,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
+            android:fontFamily="sans-serif-condensed-medium"
             android:text="Humidity"
             android:textAlignment="center"
             android:textColor="@color/black" />
@@ -134,6 +139,7 @@
             android:id="@+id/img_wind"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:fontFamily="sans-serif-condensed-medium"
             app:srcCompat="@drawable/wind" />
 
         <TextView
@@ -141,6 +147,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
+            android:fontFamily="sans-serif-condensed-medium"
             android:text="Wind speed"
             android:textAlignment="center"
             android:textColor="@color/black" />
