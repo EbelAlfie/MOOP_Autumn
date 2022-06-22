@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_home"
+    android:background="@drawable/back"
     android:orientation="vertical">
 
     <Button
@@ -44,7 +44,7 @@
             android:id="@+id/img_cuaca"
             android:layout_width="match_parent"
             android:layout_height="130dp"
-            app:srcCompat="@drawable/Overcast" />
+            app:srcCompat="@drawable/overcast" />
 
         <TextView
             android:id="@+id/text_weather"
@@ -81,7 +81,7 @@
             android:id="@+id/img_temperature"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            app:srcCompat="@drawable/Temp" />
+            app:srcCompat="@drawable/temp" />
 
         <TextView
             android:id="@+id/text_temperature"
@@ -109,7 +109,7 @@
             android:id="@+id/img_humidity"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            app:srcCompat="@drawable/Humid" />
+            app:srcCompat="@drawable/humid" />
 
         <TextView
             android:id="@+id/text_humidity"
@@ -136,7 +136,7 @@
             android:id="@+id/img_wind"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            app:srcCompat="@drawable/Wind" />
+            app:srcCompat="@drawable/wind" />
 
         <TextView
             android:id="@+id/text_wind"

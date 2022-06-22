@@ -1,78 +1,71 @@
 package com.example.autumn_finalproject;
 
-public class CourseModal {
-    private String Date;
-    private String City;
-    private String Weather;
-    private String Temperature;
-    private String Humidity;
-    private String Wind;
+public class WeatherModal {
     private int id;
+    private String city;
+    private String weather;
+    private String temper;
+    private String humid;
+    private String wind;
 
-    // creating getter and setter methods
-    public String getDate() {
-        return Date;
-    }
-
-    public void setDate(String x) {
-        this.Date = x;
-    }
-    public String getCity() {
-        return City;
-    }
-
-    public void setCity(String x) {
-        this.City = x;
-    }
-
-    public String getWeather() {
-        return Weather;
-    }
-
-    public void setWeather(String x) {
-        this.Weather = x;
-    }
-
-    public String getTemperature() {
-        return Temperature;
-    }
-
-    public void setTemperature(String x) {
-        this.Temperature = x;
-    }
-
-    public String getHumidity() {
-        return Humidity;
-    }
-
-    public void setHumidity(String x) {
-        this.Humidity = x;
-    }
-
-    public String getWind() {
-        return Wind;
-    }
-
-    public void setWind(String x) {
-        this.Wind = x;
-    }
+    //setter-getter
 
     public int getId() {
         return id;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getWeather() {
+        return weather;
+    }
+
+    public String getTemper() {
+        return temper;
+    }
+
+    public String getHumid() {
+        return humid;
+    }
+
+    public String getWind() {
+        return wind;
     }
 
     public void setId(int id) {
         this.id = id;
     }
 
-
-    // constructor
-    public CourseModal(String Date, String City, String Weather, String Temperature, String Humidity, String Wind) {
-        this.Date = Date;
-        this.City = City;
-        this.Weather = Weather;
-        this.Temperature = Temperature;
-        this.Humidity = Humidity;
-        this.Wind = Wind;
+    public void setCity(String city) {
+        this.city = city;
     }
+
+    public void setWeather(String weather) {
+        this.weather = weather;
+    }
+
+    public void setTemper(String temper) {
+        this.temper = temper;
+    }
+
+    public void setHumid(String humid) {
+        this.humid = humid;
+    }
+
+    public void setWind(String wind) {
+        this.wind = wind;
+    }
+
+    //constructor
+    public WeatherModal(int id, String city, String weather, String temper, String humid, String wind) {
+        this.id = id;
+        this.city = city;
+        this.weather = weather;
+        this.temper = temper;
+        this.humid = humid;
+        this.wind = wind;
+    }
+
 }

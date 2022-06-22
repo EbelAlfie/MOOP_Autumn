@@ -3,7 +3,6 @@ package com.example.autumn_finalproject;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -18,7 +17,6 @@ public class MainActivity extends AppCompatActivity {
     ImageView weatherIcon;
     Button lokasi;
     private DBHandler dbHandler;
-    private ArrayList<CourseModal> courseModalArrayList;
 
 
     @Override
@@ -34,23 +32,24 @@ public class MainActivity extends AppCompatActivity {
         lokasi = (Button) findViewById(R.id.btn_location);
 
         dbHandler = new DBHandler(MainActivity.this);
-        CourseModal modal = courseModalArrayList.get(1);
-        weatherState.setText(modal.getWeather());
-        humidState.setText(modal.getHumidity());
-        tempState.setText(modal.getTemperature());
-        windState.setText(modal.getWind());
-        lokasi.setText(modal.getTemperature());
 
+        //Mockup Data
+        dbHandler.addNewWeather(1, "Bandung", "Clear", "30*C", "50%", "1.5m/s South");// jaga jaga if empty
+        dbHandler.updateWeather(1, "Bandung", "Clear", "30*C", "50%", "1.5m/s South");
 
+        WeatherModal temp = dbHandler.readWeathers(1);
 
-
-
+        lokasi.setText(temp.getCity());
+        weatherState.setText(temp.getWeather());
+        tempState.setText(temp.getTemper());
+        humidState.setText(temp.getTemper());
+        windState.setText(temp.getWind());
 
         lokasi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(), chooseLocation.class);
-                lokasi.setText("Bandung");
+//                lokasi.setText("Bandung");
                 startActivity(i);
             }
         });

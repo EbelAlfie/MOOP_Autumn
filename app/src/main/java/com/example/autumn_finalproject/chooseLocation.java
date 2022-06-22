@@ -84,8 +84,6 @@ public class chooseLocation extends AppCompatActivity {
         Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
 
-
-
         chooseLoc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,7 +109,6 @@ public class chooseLocation extends AppCompatActivity {
                     System.out.println(Temperature);
                     System.out.println(Humidity);
                     System.out.println(Wind);
-                    dbHandler.addNewWeather("now", City, Weather, Temperature, Humidity, Wind);
                 }
             }
         });
@@ -137,11 +134,8 @@ public class chooseLocation extends AppCompatActivity {
                     System.out.println(Temperature);
                     System.out.println(Humidity);
                     System.out.println(Wind);
-                    dbHandler.addNewWeather("now", City, Weather, Temperature, Humidity, Wind);
+                    dbHandler.addNewWeather(1, City, Weather, Temperature, Humidity, Wind);
                 }
-
-
-
                 Intent i = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(i);
             }
