@@ -9,15 +9,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView  weatherState, humidState, tempState, windState;
+    TextView weatherState, humidState, tempState, windState;
     ImageView weatherIcon;
     Button lokasi;
     private DBHandler dbHandler;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +31,17 @@ public class MainActivity extends AppCompatActivity {
 
         dbHandler = new DBHandler(MainActivity.this);
 
-        dbHandler.addNewWeather(1, "Bandung", "Clear", "30*C", "50%", "1.5m/s South");
-        dbHandler.addNewWeather(2, "Jakarta", "Overcast", "20*C", "25%", "1m/s North");
+        try {
+            dbHandler.addNewWeather(1, "Bandung", "Clear", "30*C", "50%", "1.5m/s South");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            dbHandler.addNewWeather(2, "Jakarta", "Overcast", "20*C", "25%", "1m/s North");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         WeatherModal temp = dbHandler.readWeathers(1);
 
@@ -51,7 +58,5 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-
-
     }
 }
