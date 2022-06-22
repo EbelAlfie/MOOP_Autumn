@@ -23,10 +23,8 @@
         android:id="@+id/accent_color"
         android:layout_width="150dp"
         android:layout_height="170dp"
-        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="130dp"
         android:layout_marginTop="50dp"
         android:alpha=".75"
         app:srcCompat="@drawable/background" />
