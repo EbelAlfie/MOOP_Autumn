@@ -41,6 +41,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 + humid_col + " TEXT, "
                 + wind_col + " TEXT )";
         db.execSQL(query); //execute above command
+
     }
 
     //insert Weather

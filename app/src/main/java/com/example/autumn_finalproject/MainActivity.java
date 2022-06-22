@@ -33,23 +33,21 @@ public class MainActivity extends AppCompatActivity {
 
         dbHandler = new DBHandler(MainActivity.this);
 
-        //Mockup Data
-        dbHandler.addNewWeather(1, "Bandung", "Clear", "30*C", "50%", "1.5m/s South");// jaga jaga if empty
-        dbHandler.updateWeather(1, "Bandung", "Clear", "30*C", "50%", "1.5m/s South");
+        dbHandler.addNewWeather(1, "Bandung", "Clear", "30*C", "50%", "1.5m/s South");
+        dbHandler.addNewWeather(2, "Jakarta", "Overcast", "20*C", "25%", "1m/s North");
 
         WeatherModal temp = dbHandler.readWeathers(1);
 
         lokasi.setText(temp.getCity());
         weatherState.setText(temp.getWeather());
         tempState.setText(temp.getTemper());
-        humidState.setText(temp.getTemper());
+        humidState.setText(temp.getHumid());
         windState.setText(temp.getWind());
 
         lokasi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(), chooseLocation.class);
-//                lokasi.setText("Bandung");
                 startActivity(i);
             }
         });
