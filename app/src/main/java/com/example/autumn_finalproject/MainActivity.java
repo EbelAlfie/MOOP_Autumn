@@ -3,6 +3,8 @@ package com.example.autumn_finalproject;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,6 +14,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,6 +23,9 @@ public class MainActivity extends AppCompatActivity {
     ImageView weatherIcon;
     Button lokasi;
     private DBHandler dbHandler;
+    private RecyclerView weatherRecyclerView ; //Dav
+    private ArrayList<WeatherModal> weatherModalArrayList ; //Dav
+    private AlertAdapter alertAdapter ;//Dav
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +38,11 @@ public class MainActivity extends AppCompatActivity {
         weatherIcon = (ImageView) findViewById(R.id.img_cuaca);
         windState = (TextView) findViewById(R.id.text_wind);
         lokasi = (Button) findViewById(R.id.btn_location);
+        weatherRecyclerView = (RecyclerView) findViewById(R.id.weatherRecyclerView);  //Dav
+        weatherRecyclerView.setHasFixedSize(true);//Dav
+        weatherRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));//Dav
 
+        weatherModalArrayList = new ArrayList<>() ;//Dav
         dbHandler = new DBHandler(MainActivity.this);
 
         try { //Request Permission if not permitted
@@ -61,6 +72,13 @@ public class MainActivity extends AppCompatActivity {
         tempState.setText(temp.getTemper());
         humidState.setText(temp.getHumid());
         windState.setText(temp.getWind());
+
+        weatherModalArrayList.add(temp) ; //DAV ubah aja sesukanya
+        weatherModalArrayList.add(dbHandler.readWeathers(2)) ;//DAV ini ubah aja sesuka hati
+
+        alertAdapter = new AlertAdapter(weatherModalArrayList, getApplicationContext()) ; //Dav masukin arr list dan context main ke adapter
+
+        weatherRecyclerView.setAdapter(alertAdapter);
 
         lokasi.setOnClickListener(new View.OnClickListener() {
             @Override

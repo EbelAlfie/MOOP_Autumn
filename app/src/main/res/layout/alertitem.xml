@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:elevation="5dp"
+    android:layout_margin="10dp"
+    app:cardCornerRadius="10dp"
+    android:background="#FFFFFF">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/cityTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="City: "
+                android:textColor="@color/black" />
+            <TextView
+                android:id="@+id/theCity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="city"
+                android:layout_toRightOf="@+id/cityTextView"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/temperatureTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Temperature: "
+                android:layout_below="@+id/cityTextView"
+                android:textColor="@color/black" />
+            <TextView
+                android:id="@+id/theTemperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cityTextView"
+                android:text="temperature"
+                android:layout_toRightOf="@id/temperatureTextView"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/weatherTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Weather: "
+                android:layout_below="@+id/temperatureTextView"
+                android:textColor="@color/black" />
+            <TextView
+                android:id="@+id/theWeather"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/temperatureTextView"
+                android:text="weather"
+                android:layout_toRightOf="@id/weatherTextView"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/windTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wind: "
+                android:layout_below="@+id/weatherTextView"
+                android:textColor="@color/black" />
+            <TextView
+                android:id="@+id/theWind"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/weatherTextView"
+                android:text="wind"
+                android:layout_toRightOf="@+id/windTextView"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/humidityTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Humidity: "
+                android:layout_below="@+id/windTextView"
+                android:textColor="@color/black" />
+            <TextView
+                android:id="@+id/theHumidity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/windTextView"
+                android:text="humidity"
+                android:layout_toRightOf="@id/humidityTextView"
+                android:textColor="@color/black" />
+        </RelativeLayout>
+</androidx.cardview.widget.CardView>
