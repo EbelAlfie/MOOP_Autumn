@@ -79,7 +79,7 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(temper_col, temper);
         values.put(humid_col, humid);
         values.put(wind_col, wind);
-        db.update(TABLE_NAME, values, "ID=?", new String[]{"1"});
+        db.update(TABLE_NAME, values, "ID=?", new String[]{id_s}); //Change Hardcode ID = 1 to parameter
         db.close();
     }
 

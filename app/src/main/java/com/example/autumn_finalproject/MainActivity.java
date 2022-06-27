@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView weatherRecyclerView ; //Dav
     private ArrayList<WeatherModal> weatherModalArrayList ; //Dav
     private AlertAdapter alertAdapter ;//Dav
+    private WeatherModal temp; //Global variable
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         weatherModalArrayList = new ArrayList<>() ;//Dav
         dbHandler = new DBHandler(MainActivity.this);
+        temp = dbHandler.readWeathers(1); //Declare Weather modal
 
         try { //Request Permission if not permitted
             if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -65,8 +67,6 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        WeatherModal temp = dbHandler.readWeathers(1);
-
         lokasi.setText(temp.getCity());
         weatherState.setText(temp.getWeather());
         tempState.setText(temp.getTemper());
@@ -85,6 +85,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(), chooseLocation.class);
                 startActivity(i);
+                /*TODO
+                Fix DB bug not updateing. Harus 2x setting lokasi baru update
+                 */
             }
         });
     }

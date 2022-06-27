@@ -2,6 +2,7 @@ package com.example.autumn_finalproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -32,7 +33,8 @@ public class chooseLocation extends AppCompatActivity {
     private String cityTemp, weatherTemp, temperatureTemp, humidityTemp, windTemp ; //DAV pasti ga akan ditampilin di text view sini kan? variable itu bisa buat assign ke database/ pass ke activity main, dll sesuai kebutuhan
 
     private String apiKey = "APPID=d558cd5956417860a943c0df0a197172" ;
-    private String url1 = "http://api.openweathermap.org/data/2.5/weather?" + apiKey;
+    private String units = "&units=metric"; //Unit metric/imperial
+    private String url1 = "http://api.openweathermap.org/data/2.5/weather?" + apiKey + units;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +44,7 @@ public class chooseLocation extends AppCompatActivity {
 
         chooseLoc = (Button) findViewById(R.id.btn_chooseLoc);
         getLoc = (Button) findViewById(R.id.btn_currentLoc);
+        dbHandler = new DBHandler(chooseLocation.this); //DB Access
 
         city = (TextView) findViewById(R.id.txt_city);
         weather = (TextView) findViewById(R.id.txt_weather);
@@ -70,9 +73,8 @@ public class chooseLocation extends AppCompatActivity {
                 }catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-//                Intent i = new Intent(getApplicationContext(), MainActivity.class);
-//                dbHandler.updateWeather(1, "Jakarta", "Overcast", "20*C", "25%", "1m/s North");
-//                startActivity(i);
+                Intent i = new Intent(getApplicationContext(), MainActivity.class); //Go to MainActivity
+                startActivity(i);
             }
         });
 
@@ -89,9 +91,8 @@ public class chooseLocation extends AppCompatActivity {
                 }catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-//                Intent i = new Intent(getApplicationContext(), MainActivity.class);
-//                dbHandler.updateWeather(1, "Bandung", "Clear", "30*C", "50%", "1.5m/s South");
-//                startActivity(i);
+                Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(i);
             }
         });
     }
@@ -107,16 +108,18 @@ public class chooseLocation extends AppCompatActivity {
                     //DAV masukin seluruh data yang dibutuhkan ke variabel. Kalau2 mau di assign ke database, dll sesuai kebutuhan
                     cityTemp = response.getString("name");
                     weatherTemp = response.getJSONArray("weather").getJSONObject(0).optString("description");
-                    temperatureTemp = response.getJSONObject("main").optString("temp_min");
-                    humidityTemp = response.getJSONObject("main").optString("humidity") ;
-                    windTemp = response.getJSONObject("wind").optString("speed");
+                    weatherTemp = toTitleCase(weatherTemp); //Title case Weather
+                    temperatureTemp = response.getJSONObject("main").optString("temp") + "°C"; //current temp add °C
+                    humidityTemp = response.getJSONObject("main").optString("humidity") + "%"; //Add %
+                    windTemp = response.getJSONObject("wind").optString("speed") + " m/s " + response.getJSONObject("wind").optString("deg")+"°"; //add speed and direction, TODO: classify degree to common name https://uni.edu/storm/Wind%20Direction%20slide.pdf
                     //DAV set data tadi ke text view. Bisa dihapus kalau mau
-                    city.setText(cityTemp);
-                    weather.setText(weatherTemp);
-                    temper.setText(temperatureTemp);
-                    humid.setText(humidityTemp);
-                    wind.setText(windTemp);
+//                    city.setText(cityTemp);
+//                    weather.setText(weatherTemp);
+//                    temper.setText(temperatureTemp);
+//                    humid.setText(humidityTemp);
+//                    wind.setText(windTemp);
                     //abis ini bisa update databasenya atau pass ke main activity via intent.
+                    dbHandler.updateWeather(1, cityTemp, weatherTemp, temperatureTemp, humidityTemp, windTemp); //Update DB after API request
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -143,6 +146,24 @@ public class chooseLocation extends AppCompatActivity {
         }else{
             return "0";
         }
+    }
+
+    public static String toTitleCase(String input) {//Capilalize Weather Name
+        StringBuilder titleCase = new StringBuilder(input.length());
+        boolean nextTitleCase = true;
+
+        for (char c : input.toCharArray()) {
+            if (Character.isSpaceChar(c)) {
+                nextTitleCase = true;
+            } else if (nextTitleCase) {
+                c = Character.toTitleCase(c);
+                nextTitleCase = false;
+            }
+
+            titleCase.append(c);
+        }
+
+        return titleCase.toString();
     }
 
 }
