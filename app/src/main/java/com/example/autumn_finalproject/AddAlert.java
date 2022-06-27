@@ -1,13 +1,13 @@
 package com.example.autumn_finalproject;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -20,39 +20,28 @@ import java.net.URLEncoder;
 
 import cz.msebera.android.httpclient.Header;
 
-
-public class chooseLocation extends AppCompatActivity {
-
-    EditText inputLocation;
+public class AddAlert extends AppCompatActivity {
+    EditText inputLocation, inputTime;
     Button chooseLoc, getLoc;
-    TextView city, weather, temper, humid, wind;
-    TextView txt_lat, txt_lon;
-    private DBHandler dbHandler;
+    private AlertDBHandler dbHandler;
     GpsTracker gpsTracker;
 
     private String cityTemp, weatherTemp, temperatureTemp, humidityTemp, windTemp; //DAV pasti ga akan ditampilin di text view sini kan? variable itu bisa buat assign ke database/ pass ke activity main, dll sesuai kebutuhan
 
     private final String apiKey = "APPID=d558cd5956417860a943c0df0a197172";
     private final String units = "&units=metric"; //Unit metric/imperial
-    private final String url1 = "http://api.openweathermap.org/data/2.5/weather?" + apiKey + units;
+    private final String url1 = "http://api.openweathermap.org/data/2.5/forecast?" + apiKey + units;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_choose_location);
+        setContentView(R.layout.activity_add_alert);
+        inputLocation = findViewById(R.id.inputLocationAlert);
+        inputTime = findViewById(R.id.inputTimeAlert);
 
-        inputLocation = findViewById(R.id.inputLocation);
-
-        chooseLoc = findViewById(R.id.btn_chooseLoc);
-        getLoc = findViewById(R.id.btn_currentLoc);
-        dbHandler = new DBHandler(chooseLocation.this); //DB Access
-
-//        city = (TextView) findViewById(R.id.txt_city);
-//        weather = (TextView) findViewById(R.id.txt_weather);
-//        temper = (TextView) findViewById(R.id.txt_temp);
-//        humid = (TextView) findViewById(R.id.txt_humid);
-//        wind = (TextView) findViewById(R.id.txt_wind);
-//        txt_lat = (TextView) findViewById(R.id.txt_lat);
-//        txt_lon = (TextView) findViewById(R.id.txt_lon);
+        chooseLoc = findViewById(R.id.btn_chooseLocAlert);
+        getLoc = findViewById(R.id.btn_currentLocAlert);
+        dbHandler = new AlertDBHandler(AddAlert.this); //DB Access
 
         cityTemp = null; //DAV kalo" belum ada isinya
         weatherTemp = null;//DAV
@@ -63,8 +52,15 @@ public class chooseLocation extends AppCompatActivity {
         chooseLoc.setOnClickListener(new View.OnClickListener() { //Get Weather With City Name
             @Override
             public void onClick(View view) {
-                String temp = String.valueOf(inputLocation.getText());
-                String param = "&q=" + temp; //DAV parameternya nama kota
+                String query = String.valueOf(inputLocation.getText());
+                String cnt = "1";
+                if(cnt != ""){
+                    cnt = String.valueOf(inputTime.getText());;
+                }else{
+                    int cnt_n = Integer.valueOf(cnt) * 6;
+                    cnt = String.valueOf(cnt_n);
+                }
+                String param = "&q=" + query + "&cnt=" + cnt; //DAV parameternya nama kota
                 try {
                     getData(param); //DAV fetch JSON data based on url + param (paramnya aja soalnya cuman itu yang beda)
                 } catch (UnsupportedEncodingException e) {
@@ -80,9 +76,8 @@ public class chooseLocation extends AppCompatActivity {
             public void onClick(View view) {
                 String lat = getLocs(1); //DAV asign getLocs lat
                 String lon = getLocs(2); //DAV asign getLocs lon
-//                txt_lat.setText(lat);
-//                txt_lon.setText(lon);
-                String param = "&lon=" + lon + "&lat=" + lat; //DAV parameternya longitude dan latitude. jadi url+ param juga
+                String cnt = String.valueOf(inputTime.getText());
+                String param = "&lon=" + lon + "&lat=" + lat + "&cnt=" + cnt; //DAV parameternya longitude dan latitude. jadi url+ param juga
                 try {
                     getData(param);//DAV untuk fetch data based on lon and lat
                 } catch (UnsupportedEncodingException e) {
@@ -92,6 +87,7 @@ public class chooseLocation extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
     }
 
     private void getData(String param) throws UnsupportedEncodingException { //DAV ini fungsi utk get data
@@ -103,7 +99,7 @@ public class chooseLocation extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) { //DAV kalau success, get datanya berdasarkan parameter response bentuk JSONObject
                 try {
                     //DAV masukin seluruh data yang dibutuhkan ke variabel. Kalau2 mau di assign ke database, dll sesuai kebutuhan
-                    cityTemp = response.getString("name");
+                    cityTemp = response.getJSONObject("city").getString("name");
                     weatherTemp = response.getJSONArray("weather").getJSONObject(0).optString("description");
                     weatherTemp = toTitleCase(weatherTemp); //Title case Weather
                     temperatureTemp = response.getJSONObject("main").optString("temp") + "°C"; //current temp add °C
@@ -111,14 +107,9 @@ public class chooseLocation extends AppCompatActivity {
                     int windDeg = Integer.valueOf(response.getJSONObject("wind").optString("deg"));
                     String winDir_s = wind_direction(windDeg);
                     windTemp = response.getJSONObject("wind").optString("speed") + " m/s " + winDir_s;
-                    //DAV set data tadi ke text view. Bisa dihapus kalau mau
-//                    city.setText(cityTemp);
-//                    weather.setText(weatherTemp);
-//                    temper.setText(temperatureTemp);
-//                    humid.setText(humidityTemp);
-//                    wind.setText(windTemp);
-                    //abis ini bisa update databasenya atau pass ke main activity via intent.
-                    dbHandler.updateWeather(1, cityTemp, weatherTemp, temperatureTemp, humidityTemp, windTemp); //Update DB after API request
+                    String time = "1"; //TODO: Nanti diganti
+
+                    dbHandler.addNewAlert(time, cityTemp, weatherTemp, temperatureTemp, humidityTemp, windTemp); //Update DB after API request
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -129,7 +120,7 @@ public class chooseLocation extends AppCompatActivity {
     public String getLocs(int ID) { //ID  1 = lat, ID 2 = lon
         String t_lat = "0";
         String t_lon = "0";
-        gpsTracker = new GpsTracker(chooseLocation.this);
+        gpsTracker = new GpsTracker(AddAlert.this);
         if (gpsTracker.canGetLocation()) {
             double latitude = gpsTracker.getLatitude();
             double longitude = gpsTracker.getLongitude();
@@ -186,5 +177,4 @@ public class chooseLocation extends AppCompatActivity {
         }
         return temp;
     }
-
 }
