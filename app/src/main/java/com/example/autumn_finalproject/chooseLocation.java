@@ -46,11 +46,13 @@ public class chooseLocation extends AppCompatActivity {
         getLoc = (Button) findViewById(R.id.btn_currentLoc);
         dbHandler = new DBHandler(chooseLocation.this); //DB Access
 
-        city = (TextView) findViewById(R.id.txt_city);
-        weather = (TextView) findViewById(R.id.txt_weather);
-        temper = (TextView) findViewById(R.id.txt_temp);
-        humid = (TextView) findViewById(R.id.txt_humid);
-        wind = (TextView) findViewById(R.id.txt_wind);
+//        city = (TextView) findViewById(R.id.txt_city);
+//        weather = (TextView) findViewById(R.id.txt_weather);
+//        temper = (TextView) findViewById(R.id.txt_temp);
+//        humid = (TextView) findViewById(R.id.txt_humid);
+//        wind = (TextView) findViewById(R.id.txt_wind);
+//        txt_lat = (TextView) findViewById(R.id.txt_lat);
+//        txt_lon = (TextView) findViewById(R.id.txt_lon);
 
         cityTemp = null ; //DAV kalo" belum ada isinya
         weatherTemp= null;//DAV
@@ -58,8 +60,6 @@ public class chooseLocation extends AppCompatActivity {
         humidityTemp= null; //DAV
         windTemp= null;//DAV
 
-        txt_lat = (TextView) findViewById(R.id.txt_lat);
-        txt_lon = (TextView) findViewById(R.id.txt_lon);
 
         dbHandler = new DBHandler(chooseLocation.this);
 
@@ -111,7 +111,11 @@ public class chooseLocation extends AppCompatActivity {
                     weatherTemp = toTitleCase(weatherTemp); //Title case Weather
                     temperatureTemp = response.getJSONObject("main").optString("temp") + "°C"; //current temp add °C
                     humidityTemp = response.getJSONObject("main").optString("humidity") + "%"; //Add %
-                    windTemp = response.getJSONObject("wind").optString("speed") + " m/s " + response.getJSONObject("wind").optString("deg")+"°"; //add speed and direction, TODO: classify degree to common name https://uni.edu/storm/Wind%20Direction%20slide.pdf
+                    windTemp = response.getJSONObject("wind").optString("speed") + " m/s " + response.getJSONObject("wind").optString("deg")+"°";
+                    /*
+                    add speed and direction
+                    TODO: classify degree to common name https://uni.edu/storm/Wind%20Direction%20slide.pdf
+                     */
                     //DAV set data tadi ke text view. Bisa dihapus kalau mau
 //                    city.setText(cityTemp);
 //                    weather.setText(weatherTemp);

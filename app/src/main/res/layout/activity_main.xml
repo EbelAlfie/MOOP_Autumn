@@ -12,12 +12,12 @@
         android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:backgroundTint="@color/white"
         android:layout_marginTop="1dp"
-        android:fontFamily="sans-serif-condensed-medium"
         android:alpha=".7"
+        android:backgroundTint="@color/white"
+        android:fontFamily="sans-serif-condensed-medium"
         android:text="Location"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black" />
 
 
     <ImageView
@@ -50,8 +50,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
-            android:text="Weather"
             android:fontFamily="sans-serif-condensed-medium"
+            android:text="Weather"
             android:textAlignment="center"
             android:textColor="@color/black" />
     </LinearLayout>
@@ -162,13 +162,14 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="20dp"
-        android:alpha=".5"
-        android:background="#fff">
+        android:background="#80D9D9D9">
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/weatherRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:alpha="1" />
     </RelativeLayout>
 
 
