@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.OnAl
 
     TextView weatherState, humidState, tempState, windState;
     ImageView weatherIcon;
-    Button lokasi;
+    Button lokasi, addAlert;
     private DBHandler dbHandler;
     private RecyclerView weatherRecyclerView; //Dav
     private ArrayList<WeatherModal> weatherModalArrayList; //Dav
@@ -43,13 +43,13 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.OnAl
         weatherIcon = (ImageView) findViewById(R.id.img_cuaca);
         windState = (TextView) findViewById(R.id.text_wind);
         lokasi = (Button) findViewById(R.id.btn_location);
+        addAlert = (Button) findViewById(R.id.btn_addAlert);
         weatherRecyclerView = (RecyclerView) findViewById(R.id.weatherRecyclerView);  //Dav
         weatherRecyclerView.setHasFixedSize(true);//Dav
         weatherRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));//Dav
 
         weatherModalArrayList = new ArrayList<>();//Dav
         dbHandler = new DBHandler(MainActivity.this);
-        temp = dbHandler.readWeathers(1); //Declare Weather modal
 
         try { //Request Permission if not permitted
             if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -70,31 +70,28 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.OnAl
         } catch (Exception e) {
             e.printStackTrace();
         }
+        temp = dbHandler.readWeathers(1); //Declare Weather modal
 
-        lokasi.setText(temp.getCity());
+        if(temp.getCity()== null){
+            lokasi.setText("Lokasi");
+        }else {
+            lokasi.setText(temp.getCity());
+        }
         weatherState.setText(temp.getWeather());
         tempState.setText(temp.getTemper());
         humidState.setText(temp.getHumid());
         windState.setText(temp.getWind());
         if(temp.getWeather().contains("Clear")){
-            System.out.println("Clear");
+            weatherIcon.setImageResource(R.drawable.sunny1);
         }else if(temp.getWeather().contains("Clouds")){
-            System.out.println("Overcast");
+            weatherIcon.setImageResource(R.drawable.overcast1);
         }else if(temp.getWeather().contains("Rain")){
-            System.out.println("Rain");
+            weatherIcon.setImageResource(R.drawable.rain1);
         }else if(temp.getWeather().contains("Thunderstorm")){
-            System.out.println("Storm");
+            weatherIcon.setImageResource(R.drawable.storm1);
         }else{
-            System.out.println("Overcast");
+            weatherIcon.setImageResource(R.drawable.overcast1);
         }
-        /*TODO
-        [x]Function Change Icon, if Contains::
-            - Clear //clear
-            - Overcast / Clouds //clouds
-            - Rain //rain
-            - Storm // thunderstorm
-        Change sout to change img
-         */
 
         weatherModalArrayList.add(temp); //DAV ubah aja sesukanya
         weatherModalArrayList.add(dbHandler.readWeathers(2));//DAV ini ubah aja sesuka hati
@@ -115,6 +112,13 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.OnAl
                  */
             }
         });
+        addAlert.setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), AddAlert.class);
+                startActivity(i);
+            }
+        }));
     }
 
     @Override
