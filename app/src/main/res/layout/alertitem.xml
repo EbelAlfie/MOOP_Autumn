@@ -11,13 +11,14 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_margin="10dp">
 
             <TextView
                 android:id="@+id/cityTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="City: "
+                android:text="City\t\t\t\t\t\t\t\t\t\t: "
                 android:textColor="@color/black" />
             <TextView
                 android:id="@+id/theCity"
@@ -31,7 +32,7 @@
                 android:id="@+id/temperatureTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Temperature: "
+                android:text="Temperature\t: "
                 android:layout_below="@+id/cityTextView"
                 android:textColor="@color/black" />
             <TextView
@@ -47,7 +48,7 @@
                 android:id="@+id/weatherTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Weather: "
+                android:text="Weather\t\t\t\t\t: "
                 android:layout_below="@+id/temperatureTextView"
                 android:textColor="@color/black" />
             <TextView
@@ -63,7 +64,7 @@
                 android:id="@+id/windTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Wind: "
+                android:text="Wind\t\t\t\t\t\t\t\t\t: "
                 android:layout_below="@+id/weatherTextView"
                 android:textColor="@color/black" />
             <TextView
@@ -79,7 +80,7 @@
                 android:id="@+id/humidityTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Humidity: "
+                android:text="Humidity\t\t\t\t\t: "
                 android:layout_below="@+id/windTextView"
                 android:textColor="@color/black" />
             <TextView
