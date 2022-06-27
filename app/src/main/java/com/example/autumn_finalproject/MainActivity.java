@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 
@@ -72,12 +73,24 @@ public class MainActivity extends AppCompatActivity {
         tempState.setText(temp.getTemper());
         humidState.setText(temp.getHumid());
         windState.setText(temp.getWind());
+        if(temp.getWeather().contains("Clear")){
+            System.out.println("Clear");
+        }else if(temp.getWeather().contains("Clouds")){
+            System.out.println("Overcast");
+        }else if(temp.getWeather().contains("Rain")){
+            System.out.println("Rain");
+        }else if(temp.getWeather().contains("Thunderstorm")){
+            System.out.println("Storm");
+        }else{
+            System.out.println("Overcast");
+        }
         /*TODO
-        Function Change Icon, if Contains::
-        - Clear
-        - Overcast / Clouds
-        - Rain
-        - Storm
+        [x]Function Change Icon, if Contains::
+            - Clear //clear
+            - Overcast / Clouds //clouds
+            - Rain //rain
+            - Storm // thunderstorm
+        Change sout to change img
          */
 
         weatherModalArrayList.add(temp); //DAV ubah aja sesukanya
