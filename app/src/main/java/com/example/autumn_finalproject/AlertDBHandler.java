@@ -12,13 +12,13 @@ public class AlertDBHandler extends SQLiteOpenHelper {
 
     // creating a constant variables for our database.
     // below variable is for our database name.
-    private static final String DB_NAME = "autumn_db";
+    private static final String DB_NAME = "alert_DB";
 
     // below int is our database version
     private static final int DB_VERSION = 1;
 
     // below variable is for our table name.
-    private static final String TABLE_NAME = "myAlerts"; //IMPORTANT WAJIB
+    private static final String TABLE_NAME = "myCourse"; //IMPORTANT WAJIB
 
     private static final String ID_COL = "id";
     private static final String time_col = "time";
@@ -63,10 +63,17 @@ public class AlertDBHandler extends SQLiteOpenHelper {
     //select where ID = n
     public AlertModal readAlerts(int ID) {
         SQLiteDatabase db = this.getReadableDatabase();
-        ArrayList<WeatherModal> array_list = new ArrayList<>();
-        Cursor c = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE ID = " + ID, null);
+        AlertModal temp;
+        int i = 1;
+        Cursor c = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
         c.moveToFirst();
-        AlertModal temp = new AlertModal(c.getInt(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c.getString(6));
+        do{
+            i++;
+        temp = new AlertModal(c.getInt(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c.getString(6));
+            if(i==ID){
+                break;
+            }
+        } while(c.moveToNext());
         c.close();
         return temp;
     }
@@ -83,6 +90,13 @@ public class AlertDBHandler extends SQLiteOpenHelper {
         values.put(humid_col, humid);
         values.put(wind_col, wind);
         db.update(TABLE_NAME, values, "ID=?", new String[]{id_s}); //Change Hardcode ID = 1 to parameter
+        db.close();
+    }
+
+    public void deleteAlert(int ID) { //TODO: Belum Berfungsi
+        String id_s = String.valueOf(ID);
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_NAME, "id=?", new String[]{id_s});
         db.close();
     }
 

@@ -27,10 +27,12 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.OnAl
     ImageView weatherIcon;
     Button lokasi, addAlert;
     private DBHandler dbHandler;
+    private AlertDBHandler dbAlerts;
     private RecyclerView weatherRecyclerView; //Dav
     private ArrayList<WeatherModal> weatherModalArrayList; //Dav
     private AlertAdapter alertAdapter;//Dav
     private WeatherModal temp; //Global variable
+    private AlertModal alertModal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +51,8 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.OnAl
         weatherRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));//Dav
 
         weatherModalArrayList = new ArrayList<>();//Dav
-        dbHandler = new DBHandler(MainActivity.this);
+        dbHandler = new DBHandler(MainActivity.this);//DB for Weather Modal
+        dbAlerts = new AlertDBHandler(MainActivity.this); // DB for Alerts Modal
 
         try { //Request Permission if not permitted
             if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -61,14 +64,18 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.OnAl
 
         try {
             dbHandler.addNewWeather(1, "N/A", "N/A", "N/A", "N/A", "N/A");
-            dbHandler.addNewWeather(2, "N/A", "N/A", "N/A", "N/A", "N/A");
-            dbHandler.addNewWeather(3, "N/A", "N/A", "N/A", "N/A", "N/A");
-            dbHandler.addNewWeather(4, "N/A", "N/A", "N/A", "N/A", "N/A");
+            dbAlerts.addNewAlert("N/A", "N/A", "N/A", "N/A", "N/A", "N/A");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         temp = dbHandler.readWeathers(1); //Declare Weather modal
+
+        //TODO: Testing DBRead
+        alertModal = dbAlerts.readAlerts(1);
+        System.out.println("1"+alertModal.getCity()+alertModal.getWeather());
+        alertModal = dbAlerts.readAlerts(2);
+        System.out.println("2"+alertModal.getCity()+alertModal.getWeather());
 
         if(temp.getCity()== null){
             lokasi.setText("Lokasi");
@@ -91,11 +98,10 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.OnAl
             weatherIcon.setImageResource(R.drawable.overcast1);
         }
 
-        //TODO: Set auto detect juml Alerts
+        //TODO: Set auto detect juml Alerts. Use AlertModal
         weatherModalArrayList.add(temp); //DAV ubah aja sesukanya
-        weatherModalArrayList.add(dbHandler.readWeathers(2));//DAV ini ubah aja sesuka hati
-        weatherModalArrayList.add(dbHandler.readWeathers(3));
-        weatherModalArrayList.add(dbHandler.readWeathers(4));
+//        weatherModalArrayList.add(dbHandler.readWeathers(2));//DAV ini ubah aja sesuka hati
+
 
 
         alertAdapter = new AlertAdapter(weatherModalArrayList, getApplicationContext(), this); //Dav masukin arr list dan context main ke adapter
