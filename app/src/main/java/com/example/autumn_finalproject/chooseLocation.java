@@ -70,8 +70,6 @@ public class chooseLocation extends AppCompatActivity {
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-                Intent i = new Intent(getApplicationContext(), MainActivity.class); //Go to MainActivity
-                startActivity(i);
             }
         });
 
@@ -88,8 +86,7 @@ public class chooseLocation extends AppCompatActivity {
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-                Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(i);
+
             }
         });
     }
@@ -119,6 +116,9 @@ public class chooseLocation extends AppCompatActivity {
 //                    wind.setText(windTemp);
                     //abis ini bisa update databasenya atau pass ke main activity via intent.
                     dbHandler.updateWeather(1, cityTemp, weatherTemp, temperatureTemp, humidityTemp, windTemp); //Update DB after API request
+
+                    Intent i = new Intent(getApplicationContext(), MainActivity.class); //DAV pindah
+                    startActivity(i); //DAV try itu synchronous, jadi dia bakal ngejalanin koding di luar try dulu, baru di dalem. Databasenya keupdate dengan benar, hanya saja intentnya yang jalan duluan baru updatenya
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

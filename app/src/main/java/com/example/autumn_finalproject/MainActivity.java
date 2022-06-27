@@ -1,11 +1,13 @@
 package com.example.autumn_finalproject;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -13,12 +15,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AlertAdapter.OnAlertClickListener {
 
     TextView weatherState, humidState, tempState, windState;
     ImageView weatherIcon;
@@ -93,9 +96,11 @@ public class MainActivity extends AppCompatActivity {
         weatherModalArrayList.add(temp); //DAV ubah aja sesukanya
         weatherModalArrayList.add(dbHandler.readWeathers(2));//DAV ini ubah aja sesuka hati
 
-        alertAdapter = new AlertAdapter(weatherModalArrayList, getApplicationContext()); //Dav masukin arr list dan context main ke adapter
+        alertAdapter = new AlertAdapter(weatherModalArrayList, getApplicationContext(), this); //Dav masukin arr list dan context main ke adapter
 
         weatherRecyclerView.setAdapter(alertAdapter);
+
+        alertAdapter.setOnAlertClickListener(this); //DAV set onclicklistener palsu
 
         lokasi.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,4 +120,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }));
     }
+
+    @Override
+    public void onDeleteClick(int position) { //DAV
+        weatherModalArrayList.remove(position) ;
+        alertAdapter.notifyItemRemoved(position);
+    }//DAV
 }

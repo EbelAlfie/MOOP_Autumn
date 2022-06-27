@@ -66,8 +66,6 @@ public class AddAlert extends AppCompatActivity {
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-                Intent i = new Intent(getApplicationContext(), MainActivity.class); //Go to MainActivity
-                startActivity(i);
             }
         });
 
@@ -83,8 +81,8 @@ public class AddAlert extends AppCompatActivity {
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-                Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(i);
+                //DAV Intentnya jangan di sini. Try itu synchronous, jadi segala statement di luar try bakal dijalanin duluan
+                //DAV databasenya sebetulnya keupdate, tapi keliatannya engga, karena intentnya yang dijalanin terlebih dahulu
             }
         });
 
@@ -110,6 +108,8 @@ public class AddAlert extends AppCompatActivity {
                     String time = "1"; //TODO: Nanti diganti
 
                     dbHandler.addNewAlert(time, cityTemp, weatherTemp, temperatureTemp, humidityTemp, windTemp); //Update DB after API request
+                    Intent i = new Intent(getApplicationContext(), MainActivity.class); //DAV pindah
+                    startActivity(i); //DAV pindah
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
