@@ -62,7 +62,7 @@ public class AddAlert extends AppCompatActivity {
                 }
                 String param = "&q=" + query + "&cnt=" + cnt; //DAV parameternya nama kota
                 try {
-                    getData(param); //DAV fetch JSON data based on url + param (paramnya aja soalnya cuman itu yang beda)
+                    getData(param, Integer.parseInt(cnt)); //DAV fetch JSON data based on url + param (paramnya aja soalnya cuman itu yang beda)
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -74,10 +74,16 @@ public class AddAlert extends AppCompatActivity {
             public void onClick(View view) {
                 String lat = getLocs(1); //DAV asign getLocs lat
                 String lon = getLocs(2); //DAV asign getLocs lon
-                String cnt = String.valueOf(inputTime.getText());
+                String cnt = "1";
+                if(cnt != ""){
+                    cnt = String.valueOf(inputTime.getText());;
+                }else{
+                    int cnt_n = Integer.valueOf(cnt) * 6;
+                    cnt = String.valueOf(cnt_n);
+                }
                 String param = "&lon=" + lon + "&lat=" + lat + "&cnt=" + cnt; //DAV parameternya longitude dan latitude. jadi url+ param juga
                 try {
-                    getData(param);//DAV untuk fetch data based on lon and lat
+                    getData(param, Integer.parseInt(cnt));//DAV untuk fetch data based on lon and lat
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -88,7 +94,7 @@ public class AddAlert extends AppCompatActivity {
 
     }
 
-    private void getData(String param) throws UnsupportedEncodingException { //DAV ini fungsi utk get data
+    private void getData(String param, int cnt) throws UnsupportedEncodingException { //DAV ini fungsi utk get data
         AsyncHttpClient client = new AsyncHttpClient();
         String finalUrl = url1 + param; //DAV final url. Antara url1+ &q=namakota atau url1 + &lon=blabla&lat=blabla
         finalUrl = URLEncoder.encode(url1 + param, "UTF-8"); //DAV encode biar pencariannya lebih cepet
@@ -98,17 +104,18 @@ public class AddAlert extends AppCompatActivity {
                 try {
                     //DAV masukin seluruh data yang dibutuhkan ke variabel. Kalau2 mau di assign ke database, dll sesuai kebutuhan
                     cityTemp = response.getJSONObject("city").getString("name");
-                    weatherTemp = response.getJSONArray("weather").getJSONObject(0).optString("description");
+                    System.out.println(cityTemp);
+                    weatherTemp = response.getJSONArray("list").getJSONObject(cnt-1).getJSONArray("weather").getJSONObject(0).getString("description");
                     weatherTemp = toTitleCase(weatherTemp); //Title case Weather
-                    temperatureTemp = response.getJSONObject("main").optString("temp") + "°C"; //current temp add °C
-                    humidityTemp = response.getJSONObject("main").optString("humidity") + "%"; //Add %
-                    int windDeg = Integer.valueOf(response.getJSONObject("wind").optString("deg"));
+                    temperatureTemp = response.getJSONArray("list").getJSONObject(cnt-1).getJSONObject("main").optString("temp") + "°C"; //current temp add °C
+                    humidityTemp = response.getJSONArray("list").getJSONObject(cnt-1).getJSONObject("main").optString("humidity") + "%"; //Add %
+                    int windDeg = Integer.valueOf(response.getJSONArray("list").getJSONObject(cnt-1).getJSONObject("wind").optString("deg"));
                     String winDir_s = wind_direction(windDeg);
-                    windTemp = response.getJSONObject("wind").optString("speed") + " m/s " + winDir_s;
-                    String time = "1"; //TODO: Nanti diganti
-
+                    windTemp = response.getJSONArray("list").getJSONObject(cnt-1).getJSONObject("wind").optString("speed") + " m/s " + winDir_s;
+                    String time = String.valueOf(cnt);
                     dbHandler.addNewAlert(time, cityTemp, weatherTemp, temperatureTemp, humidityTemp, windTemp); //Update DB after API request
                     Intent i = new Intent(getApplicationContext(), MainActivity.class); //DAV pindah
+                    System.out.println(cityTemp);
                     startActivity(i); //DAV pindah
                 } catch (JSONException e) {
                     e.printStackTrace();

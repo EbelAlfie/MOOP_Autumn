@@ -60,16 +60,14 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.OnAl
         }
 
         try {
-            dbHandler.addNewWeather(1, "Bandung", "Clear", "30*C", "50%", "1.5m/s South");
+            dbHandler.addNewWeather(1, "N/A", "N/A", "N/A", "N/A", "N/A");
+            dbHandler.addNewWeather(2, "N/A", "N/A", "N/A", "N/A", "N/A");
+            dbHandler.addNewWeather(3, "N/A", "N/A", "N/A", "N/A", "N/A");
+            dbHandler.addNewWeather(4, "N/A", "N/A", "N/A", "N/A", "N/A");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try {
-            dbHandler.addNewWeather(2, "Jakarta", "Overcast", "20*C", "25%", "1m/s North");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         temp = dbHandler.readWeathers(1); //Declare Weather modal
 
         if(temp.getCity()== null){
@@ -93,8 +91,12 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.OnAl
             weatherIcon.setImageResource(R.drawable.overcast1);
         }
 
+        //TODO: Set auto detect juml Alerts
         weatherModalArrayList.add(temp); //DAV ubah aja sesukanya
         weatherModalArrayList.add(dbHandler.readWeathers(2));//DAV ini ubah aja sesuka hati
+        weatherModalArrayList.add(dbHandler.readWeathers(3));
+        weatherModalArrayList.add(dbHandler.readWeathers(4));
+
 
         alertAdapter = new AlertAdapter(weatherModalArrayList, getApplicationContext(), this); //Dav masukin arr list dan context main ke adapter
 
@@ -107,9 +109,6 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.OnAl
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(), chooseLocation.class);
                 startActivity(i);
-                /*TODO
-                Fix DB bug not updateing. Harus 2x setting lokasi baru update
-                 */
             }
         });
         addAlert.setOnClickListener((new View.OnClickListener() {
