@@ -23,9 +23,9 @@ public class MainActivity extends AppCompatActivity {
     ImageView weatherIcon;
     Button lokasi;
     private DBHandler dbHandler;
-    private RecyclerView weatherRecyclerView ; //Dav
-    private ArrayList<WeatherModal> weatherModalArrayList ; //Dav
-    private AlertAdapter alertAdapter ;//Dav
+    private RecyclerView weatherRecyclerView; //Dav
+    private ArrayList<WeatherModal> weatherModalArrayList; //Dav
+    private AlertAdapter alertAdapter;//Dav
     private WeatherModal temp; //Global variable
 
     @Override
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         weatherRecyclerView.setHasFixedSize(true);//Dav
         weatherRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));//Dav
 
-        weatherModalArrayList = new ArrayList<>() ;//Dav
+        weatherModalArrayList = new ArrayList<>();//Dav
         dbHandler = new DBHandler(MainActivity.this);
         temp = dbHandler.readWeathers(1); //Declare Weather modal
 
@@ -72,11 +72,18 @@ public class MainActivity extends AppCompatActivity {
         tempState.setText(temp.getTemper());
         humidState.setText(temp.getHumid());
         windState.setText(temp.getWind());
+        /*TODO
+        Function Change Icon, if Contains::
+        - Clear
+        - Overcast / Clouds
+        - Rain
+        - Storm
+         */
 
-        weatherModalArrayList.add(temp) ; //DAV ubah aja sesukanya
-        weatherModalArrayList.add(dbHandler.readWeathers(2)) ;//DAV ini ubah aja sesuka hati
+        weatherModalArrayList.add(temp); //DAV ubah aja sesukanya
+        weatherModalArrayList.add(dbHandler.readWeathers(2));//DAV ini ubah aja sesuka hati
 
-        alertAdapter = new AlertAdapter(weatherModalArrayList, getApplicationContext()) ; //Dav masukin arr list dan context main ke adapter
+        alertAdapter = new AlertAdapter(weatherModalArrayList, getApplicationContext()); //Dav masukin arr list dan context main ke adapter
 
         weatherRecyclerView.setAdapter(alertAdapter);
 
