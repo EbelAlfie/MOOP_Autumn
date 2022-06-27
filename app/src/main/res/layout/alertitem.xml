@@ -95,5 +95,12 @@
             android:layout_toRightOf="@id/humidityTextView"
             android:text="humidity"
             android:textColor="@color/black" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/btn_delete"
+            android:layout_width="45dp"
+            android:layout_height="38dp"
+            android:layout_alignParentRight="true"
+            app:srcCompat="@drawable/ic_baseline_indeterminate_check_box_24" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
