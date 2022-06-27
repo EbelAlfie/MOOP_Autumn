@@ -61,9 +61,16 @@ public class DBHandler extends SQLiteOpenHelper {
     //select where ID = n
     public WeatherModal readWeathers(int ID) {
         SQLiteDatabase db = this.getReadableDatabase();
+        WeatherModal temp = new WeatherModal();
         Cursor c = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE ID = " + ID, null);
-        c.moveToFirst();
-        WeatherModal temp = new WeatherModal(c.getInt(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5));
+        if(c.moveToFirst()){
+            temp.setId(c.getInt(0));
+            temp.setCity(c.getString(1));
+            temp.setWeather(c.getString(2));
+            temp.setTemper(c.getString(3));
+            temp.setHumid(c.getString(4));
+            temp.setWind(c.getString(5));
+        }
         c.close();
         return temp;
     }

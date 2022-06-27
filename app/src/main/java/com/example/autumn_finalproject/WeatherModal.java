@@ -8,6 +8,10 @@ public class WeatherModal {
     private String humid;
     private String wind;
 
+    public WeatherModal(){
+
+    }
+
     //setter-getter
 
     public int getId() {
@@ -67,5 +71,4 @@ public class WeatherModal {
         this.humid = humid;
         this.wind = wind;
     }
-
 }
