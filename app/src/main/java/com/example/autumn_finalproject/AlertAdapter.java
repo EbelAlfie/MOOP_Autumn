@@ -36,7 +36,7 @@ public class AlertAdapter extends RecyclerView.Adapter<AlertAdapter.AlertAdapter
     @Override
     public void onBindViewHolder(@NonNull AlertAdapterViewHolder holder, int position) {
         AlertModal alertModal = alertModalsArrayList.get(position) ;
-        holder.time.setText(alertModal.getTime());
+        holder.time.setText(alertModal.getTime() + " day(s) ahead"); //Dav days aheadnya ditambah di sini
         holder.city.setText(alertModal.getCity());
         holder.weather.setText(alertModal.getWeather());
         holder.temperature.setText(alertModal.getTemper());

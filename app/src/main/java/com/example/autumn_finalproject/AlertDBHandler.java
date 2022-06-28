@@ -91,7 +91,7 @@ public class AlertDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void deleteAlert(int ID) { //TODO: Belum Berfungsi
+    public void deleteAlert(int ID) {
         String id_s = String.valueOf(ID);
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_NAME, "id=?", new String[]{id_s});
