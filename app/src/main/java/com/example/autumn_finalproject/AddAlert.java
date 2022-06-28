@@ -54,7 +54,7 @@ public class AddAlert extends AppCompatActivity {
             public void onClick(View view) {
                 String query = String.valueOf(inputLocation.getText());
                 String cnt = "1";
-                if(!String.valueOf(inputTime.getText()).equals("")){ //DAV kondisinya gw ganti ya ngab
+                if(!String.valueOf(inputTime.getText()).equals("")){ //TODO: DAV (highlight aja) kondisinya gw ganti ya ngab
                     cnt = String.valueOf(inputTime.getText());
                 }else{
                     int cnt_n = Integer.valueOf(cnt) * 6;
