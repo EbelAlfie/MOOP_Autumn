@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -29,28 +30,14 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.OnAl
     private DBHandler dbHandler;
     private AlertDBHandler dbAlerts;
     private RecyclerView weatherRecyclerView; //Dav
-    private ArrayList<WeatherModal> weatherModalArrayList; //Dav
     private AlertAdapter alertAdapter;//Dav
     private WeatherModal temp; //Global variable
-    private AlertModal alertModal;
+    private ArrayList<AlertModal> alertModalsArrayList ;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        weatherState = (TextView) findViewById(R.id.text_weather);
-        humidState = (TextView) findViewById(R.id.text_humidity);
-        tempState = (TextView) findViewById(R.id.text_temperature);
-        weatherIcon = (ImageView) findViewById(R.id.img_cuaca);
-        windState = (TextView) findViewById(R.id.text_wind);
-        lokasi = (Button) findViewById(R.id.btn_location);
-        addAlert = (Button) findViewById(R.id.btn_addAlert);
-        weatherRecyclerView = (RecyclerView) findViewById(R.id.weatherRecyclerView);  //Dav
-        weatherRecyclerView.setHasFixedSize(true);//Dav
-        weatherRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));//Dav
-
-        weatherModalArrayList = new ArrayList<>();//Dav
+    protected void onResume() {//TODO: DAV (not really, biar highlight aja). ini cuman saran aja biar intentnya ga kebanyakan. Terlalu banyak intent menurut gw, jadi gw pake ini
+        super.onResume();
+        alertModalsArrayList = new ArrayList<>();//Ganti jadi ini karena ada time
         dbHandler = new DBHandler(MainActivity.this);//DB for Weather Modal
         dbAlerts = new AlertDBHandler(MainActivity.this); // DB for Alerts Modal
 
@@ -64,18 +51,19 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.OnAl
 
         try {
             dbHandler.addNewWeather(1, "N/A", "N/A", "N/A", "N/A", "N/A");
-            dbAlerts.addNewAlert("N/A", "N/A", "N/A", "N/A", "N/A", "N/A");
+            temp = dbHandler.readWeathers(1); //Declare Weather modal
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        temp = dbHandler.readWeathers(1); //Declare Weather modal
 
         //TODO: Testing DBRead
-        alertModal = dbAlerts.readAlerts(1);
+        /*alertModal = dbAlerts.readAlerts(1);
         System.out.println("1"+alertModal.getCity()+alertModal.getWeather());
+        Log.i("Yea", "1"+alertModal.getCity()+alertModal.getWeather());
         alertModal = dbAlerts.readAlerts(2);
         System.out.println("2"+alertModal.getCity()+alertModal.getWeather());
+        Log.i("Yea", "2"+alertModal.getCity()+alertModal.getWeather());*/
 
         if(temp.getCity()== null){
             lokasi.setText("Lokasi");
@@ -97,18 +85,36 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.OnAl
         }else{
             weatherIcon.setImageResource(R.drawable.overcast1);
         }
-
-        //TODO: Set auto detect juml Alerts. Use AlertModal
-        weatherModalArrayList.add(temp); //DAV ubah aja sesukanya
+        //TODO: Set auto detect juml Alerts. Use AlertModal (Udah)
+        alertModalsArrayList = dbAlerts.readAlerts(); //DAV baca semua data di dalam database yg dihandle AlertDBHandler
 //        weatherModalArrayList.add(dbHandler.readWeathers(2));//DAV ini ubah aja sesuka hati
 
-
-
-        alertAdapter = new AlertAdapter(weatherModalArrayList, getApplicationContext(), this); //Dav masukin arr list dan context main ke adapter
+        alertAdapter = new AlertAdapter(alertModalsArrayList, getApplicationContext(), this); //Dav masukin arr list dan context main ke adapter
 
         weatherRecyclerView.setAdapter(alertAdapter);
 
         alertAdapter.setOnAlertClickListener(this); //DAV set onclicklistener palsu
+
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        weatherState = (TextView) findViewById(R.id.text_weather);
+        humidState = (TextView) findViewById(R.id.text_humidity);
+        tempState = (TextView) findViewById(R.id.text_temperature);
+        weatherIcon = (ImageView) findViewById(R.id.img_cuaca);
+        windState = (TextView) findViewById(R.id.text_wind);
+        lokasi = (Button) findViewById(R.id.btn_location);
+        addAlert = (Button) findViewById(R.id.btn_addAlert);
+        weatherRecyclerView = (RecyclerView) findViewById(R.id.weatherRecyclerView);  //Dav
+        weatherRecyclerView.setHasFixedSize(true);//Dav
+        weatherRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));//Dav
+
+
+
 
         lokasi.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,7 +134,8 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.OnAl
 
     @Override
     public void onDeleteClick(int position) { //DAV
-        weatherModalArrayList.remove(position) ;
+        dbAlerts.deleteAlert(alertModalsArrayList.get(position).getId());//Dav hapus dari database
+        alertModalsArrayList.remove(position) ;
         alertAdapter.notifyItemRemoved(position);
     }//DAV
 }

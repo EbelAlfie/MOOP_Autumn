@@ -76,13 +76,17 @@ public class chooseLocation extends AppCompatActivity {
         getLoc.setOnClickListener(new View.OnClickListener() { //Get Weather with current location
             @Override
             public void onClick(View view) {
-                String lat = getLocs(1); //DAV asign getLocs lat
-                String lon = getLocs(2); //DAV asign getLocs lon
-//                txt_lat.setText(lat);
-//                txt_lon.setText(lon);
-                String param = "&lon=" + lon + "&lat=" + lat; //DAV parameternya longitude dan latitude. jadi url+ param juga
                 try {
-                    getData(param);//DAV untuk fetch data based on lon and lat
+                    String lat = getLocs(1); //DAV asign getLocs lat
+                    if(!lat.equals("0")) {
+                        String lon = getLocs(2); //DAV asign getLocs lon
+//                  txt_lat.setText(lat);
+//                  txt_lon.setText(lon);
+
+                        String param = "&lon=" + lon + "&lat=" + lat; //DAV parameternya longitude dan latitude. jadi url+ param juga
+
+                        getData(param);//DAV untuk fetch data based on lon and lat
+                    }
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -117,8 +121,10 @@ public class chooseLocation extends AppCompatActivity {
                     //abis ini bisa update databasenya atau pass ke main activity via intent.
                     dbHandler.updateWeather(1, cityTemp, weatherTemp, temperatureTemp, humidityTemp, windTemp); //Update DB after API request
 
-                    Intent i = new Intent(getApplicationContext(), MainActivity.class); //DAV pindah
-                    startActivity(i); //DAV try itu synchronous, jadi dia bakal ngejalanin koding di luar try dulu, baru di dalem. Databasenya keupdate dengan benar, hanya saja intentnya yang jalan duluan baru updatenya
+                    //DAV engga perlu intent
+                    //Intent i = new Intent(getApplicationContext(), MainActivity.class); //DAV pindah
+                    //startActivity(i); //DAV try itu synchronous, jadi dia bakal ngejalanin koding di luar try dulu, baru di dalem. Databasenya keupdate dengan benar, hanya saja intentnya yang jalan duluan baru updatenya
+                    finish();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

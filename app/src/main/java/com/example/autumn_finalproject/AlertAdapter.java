@@ -14,12 +14,13 @@ import java.util.ArrayList;
 
 public class AlertAdapter extends RecyclerView.Adapter<AlertAdapter.AlertAdapterViewHolder>{
 
-    private ArrayList<WeatherModal> courseModalArrayList;
+    //private ArrayList<WeatherModal> courseModalArrayList;
+    private ArrayList<AlertModal> alertModalsArrayList ;
     private Context cont ;
     private OnAlertClickListener onAlertClickListener ;//DAV
 
-    public AlertAdapter(ArrayList<WeatherModal> courseModalArrayList, Context cont, OnAlertClickListener onAlertClickListener) {
-        this.courseModalArrayList = courseModalArrayList;
+    public AlertAdapter(ArrayList<AlertModal> alertModalsArrayList, Context cont, OnAlertClickListener onAlertClickListener) {
+        this.alertModalsArrayList = alertModalsArrayList;
         this.cont = cont;
         this.onAlertClickListener = onAlertClickListener ;//DAV
     }
@@ -34,25 +35,27 @@ public class AlertAdapter extends RecyclerView.Adapter<AlertAdapter.AlertAdapter
 
     @Override
     public void onBindViewHolder(@NonNull AlertAdapterViewHolder holder, int position) {
-        WeatherModal weatherModal = courseModalArrayList.get(position) ;
-        holder.city.setText(weatherModal.getCity());
-        holder.weather.setText(weatherModal.getWeather());
-        holder.temperature.setText(weatherModal.getTemper());
-        holder.humidity.setText(weatherModal.getHumid());
-        holder.wind.setText(weatherModal.getWind());
+        AlertModal alertModal = alertModalsArrayList.get(position) ;
+        holder.time.setText(alertModal.getTime() + " day(s) ahead"); //Dav days aheadnya ditambah di sini
+        holder.city.setText(alertModal.getCity());
+        holder.weather.setText(alertModal.getWeather());
+        holder.temperature.setText(alertModal.getTemper());
+        holder.humidity.setText(alertModal.getHumid());
+        holder.wind.setText(alertModal.getWind());
     }
 
     @Override
     public int getItemCount() {
-        return courseModalArrayList.size();
+        return alertModalsArrayList.size();
     }
 
     public class AlertAdapterViewHolder extends RecyclerView.ViewHolder{
-        TextView city, weather, temperature, humidity, wind ;
+        TextView city, weather, temperature, humidity, wind, time ;
         ImageView deleteBtn ;//DAV
         OnAlertClickListener onAlertClickListener ; //DAV
         public AlertAdapterViewHolder(@NonNull View itemView, OnAlertClickListener onAlertClickListener) { //DAV
             super(itemView);
+            time = (TextView) itemView.findViewById(R.id.theTime) ;
             city = (TextView) itemView.findViewById(R.id.theCity);
             weather = (TextView) itemView.findViewById(R.id.theWeather) ;
             temperature = (TextView) itemView.findViewById(R.id.theTemperature) ;

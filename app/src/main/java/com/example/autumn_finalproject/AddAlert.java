@@ -54,8 +54,8 @@ public class AddAlert extends AppCompatActivity {
             public void onClick(View view) {
                 String query = String.valueOf(inputLocation.getText());
                 String cnt = "1";
-                if(cnt != ""){
-                    cnt = String.valueOf(inputTime.getText());;
+                if(!String.valueOf(inputTime.getText()).equals("")){ //TODO: DAV (highlight aja) kondisinya gw ganti ya ngab
+                    cnt = String.valueOf(inputTime.getText());
                 }else{
                     int cnt_n = Integer.valueOf(cnt) * 6;
                     cnt = String.valueOf(cnt_n);
@@ -73,22 +73,24 @@ public class AddAlert extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String lat = getLocs(1); //DAV asign getLocs lat
-                String lon = getLocs(2); //DAV asign getLocs lon
-                String cnt = "1";
-                if(cnt != ""){
-                    cnt = String.valueOf(inputTime.getText());;
-                }else{
-                    int cnt_n = Integer.valueOf(cnt) * 6;
-                    cnt = String.valueOf(cnt_n);
+                if (!lat.equals("0")) {
+                    String lon = getLocs(2); //DAV asign getLocs lon
+                    String cnt = "1";
+                    if (cnt != "") {
+                        cnt = String.valueOf(inputTime.getText());
+                    } else {
+                        int cnt_n = Integer.valueOf(cnt) * 6;
+                        cnt = String.valueOf(cnt_n);
+                    }
+                    try {
+                        String param = "&lon=" + lon + "&lat=" + lat + "&cnt=" + cnt; //DAV parameternya longitude dan latitude.
+                        getData(param, Integer.parseInt(cnt));//DAV untuk fetch data based on lon and lat
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    //DAV Intentnya jangan di sini. Try itu synchronous, jadi segala statement di luar try bakal dijalanin duluan
+                    //DAV databasenya sebetulnya keupdate, tapi keliatannya engga, karena intentnya yang dijalanin terlebih dahulu
                 }
-                String param = "&lon=" + lon + "&lat=" + lat + "&cnt=" + cnt; //DAV parameternya longitude dan latitude. jadi url+ param juga
-                try {
-                    getData(param, Integer.parseInt(cnt));//DAV untuk fetch data based on lon and lat
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                //DAV Intentnya jangan di sini. Try itu synchronous, jadi segala statement di luar try bakal dijalanin duluan
-                //DAV databasenya sebetulnya keupdate, tapi keliatannya engga, karena intentnya yang dijalanin terlebih dahulu
             }
         });
 
@@ -96,8 +98,7 @@ public class AddAlert extends AppCompatActivity {
 
     private void getData(String param, int cnt) throws UnsupportedEncodingException { //DAV ini fungsi utk get data
         AsyncHttpClient client = new AsyncHttpClient();
-        String finalUrl = url1 + param; //DAV final url. Antara url1+ &q=namakota atau url1 + &lon=blabla&lat=blabla
-        finalUrl = URLEncoder.encode(url1 + param, "UTF-8"); //DAV encode biar pencariannya lebih cepet
+        String finalUrl = URLEncoder.encode(url1 + param, "UTF-8"); //DAV encode biar pencariannya lebih cepet
         client.get(finalUrl, new JsonHttpResponseHandler() { //DAV make a request
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) { //DAV kalau success, get datanya berdasarkan parameter response bentuk JSONObject
@@ -114,9 +115,12 @@ public class AddAlert extends AppCompatActivity {
                     windTemp = response.getJSONArray("list").getJSONObject(cnt-1).getJSONObject("wind").optString("speed") + " m/s " + winDir_s;
                     String time = String.valueOf(cnt);
                     dbHandler.addNewAlert(time, cityTemp, weatherTemp, temperatureTemp, humidityTemp, windTemp); //Update DB after API request
-                    Intent i = new Intent(getApplicationContext(), MainActivity.class); //DAV pindah
+
+                    //DAV engga perlu intent
+                    //Intent i = new Intent(getApplicationContext(), MainActivity.class); //DAV pindah
                     System.out.println(cityTemp);
-                    startActivity(i); //DAV pindah
+                    //startActivity(i); //DAV pindah
+                    finish();//DAV biar activity ga kebanyakan
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

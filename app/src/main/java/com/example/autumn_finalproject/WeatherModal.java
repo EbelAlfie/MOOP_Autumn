@@ -67,5 +67,4 @@ public class WeatherModal {
         this.humid = humid;
         this.wind = wind;
     }
-
 }

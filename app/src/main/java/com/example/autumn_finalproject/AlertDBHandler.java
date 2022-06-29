@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class AlertDBHandler extends SQLiteOpenHelper {
@@ -61,21 +62,18 @@ public class AlertDBHandler extends SQLiteOpenHelper {
     }
 
     //select where ID = n
-    public AlertModal readAlerts(int ID) {
+    public ArrayList<AlertModal> readAlerts() {
         SQLiteDatabase db = this.getReadableDatabase();
-        AlertModal temp;
-        int i = 1;
+        ArrayList<AlertModal> alertModalArrayList = new ArrayList<>() ;
+        //AlertModal temp;
         Cursor c = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
-        c.moveToFirst();
-        do{
-            i++;
-        temp = new AlertModal(c.getInt(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c.getString(6));
-            if(i==ID){
-                break;
-            }
-        } while(c.moveToNext());
-        c.close();
-        return temp;
+        if(c.moveToFirst()) {
+            do {
+                alertModalArrayList.add(new AlertModal(c.getInt(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c.getString(6)));
+            } while (c.moveToNext());
+            c.close();
+        }
+        return alertModalArrayList;
     }
 
     //Update Weather
@@ -93,7 +91,7 @@ public class AlertDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void deleteAlert(int ID) { //TODO: Belum Berfungsi
+    public void deleteAlert(int ID) {
         String id_s = String.valueOf(ID);
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_NAME, "id=?", new String[]{id_s});
