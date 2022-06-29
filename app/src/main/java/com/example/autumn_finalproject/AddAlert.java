@@ -53,12 +53,13 @@ public class AddAlert extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String query = String.valueOf(inputLocation.getText());
-                String cnt = "1";
+                String cnt;
                 if(!String.valueOf(inputTime.getText()).equals("")){ //TODO: DAV (highlight aja) kondisinya gw ganti ya ngab
                     cnt = String.valueOf(inputTime.getText());
-                }else{
                     int cnt_n = Integer.valueOf(cnt) * 6;
                     cnt = String.valueOf(cnt_n);
+                }else{
+                    cnt = "6";
                 }
                 String param = "&q=" + query + "&cnt=" + cnt; //DAV parameternya nama kota
                 try {
@@ -75,12 +76,13 @@ public class AddAlert extends AppCompatActivity {
                 String lat = getLocs(1); //DAV asign getLocs lat
                 if (!lat.equals("0")) {
                     String lon = getLocs(2); //DAV asign getLocs lon
-                    String cnt = "1";
-                    if (cnt != "") {
+                    String cnt;
+                    if (!String.valueOf(inputTime.getText()).equals("")) {
                         cnt = String.valueOf(inputTime.getText());
-                    } else {
                         int cnt_n = Integer.valueOf(cnt) * 6;
                         cnt = String.valueOf(cnt_n);
+                    } else {
+                        cnt = "6";
                     }
                     try {
                         String param = "&lon=" + lon + "&lat=" + lat + "&cnt=" + cnt; //DAV parameternya longitude dan latitude.

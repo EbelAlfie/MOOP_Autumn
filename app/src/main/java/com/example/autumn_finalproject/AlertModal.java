@@ -15,8 +15,9 @@ public class AlertModal {
         return id;
     }
 
-    public String getTime() {
-        return time;
+    public String getTime() { //Time format 3hrs cycle
+        String temp = String.valueOf(Integer.valueOf(time)/6);
+        return temp;
     }
 
     public String getCity() {
