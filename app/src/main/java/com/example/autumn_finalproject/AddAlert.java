@@ -131,7 +131,8 @@ public class AddAlert extends AppCompatActivity {
                     }
                     finish();//DAV biar activity ga kebanyakan
                 } catch (JSONException e) {
-                    e.printStackTrace(); //TODO: DI sini error kalau input location: England dan days ahead: 7
+                    e.printStackTrace(); //TODO: DI sini error kalau input location: England dan days ahead: 7. 6 masih bisa
+                    Toast.makeText(AddAlert.this, "Reached maximum days ahead! Cannot fetch data", Toast.LENGTH_SHORT).show();
                     if(progressDialog.isShowing()){
                         progressDialog.dismiss();
                     }
