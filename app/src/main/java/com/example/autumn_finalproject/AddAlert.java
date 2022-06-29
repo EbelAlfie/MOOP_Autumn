@@ -125,9 +125,7 @@ public class AddAlert extends AppCompatActivity {
                     dbHandler.addNewAlert(time, cityTemp, weatherTemp, temperatureTemp, humidityTemp, windTemp); //Update DB after API request
 
                     //DAV engga perlu intent
-                    //Intent i = new Intent(getApplicationContext(), MainActivity.class); //DAV pindah
                     //System.out.println(cityTemp);
-                    //startActivity(i); //DAV pindah
                     if(progressDialog.isShowing()){
                         progressDialog.dismiss();
                     }
