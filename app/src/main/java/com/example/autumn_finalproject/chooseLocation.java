@@ -2,12 +2,14 @@ package com.example.autumn_finalproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -29,6 +31,7 @@ public class chooseLocation extends AppCompatActivity {
     TextView txt_lat, txt_lon;
     private DBHandler dbHandler;
     GpsTracker gpsTracker;
+    ProgressDialog progressDialog ;
 
     private String cityTemp, weatherTemp, temperatureTemp, humidityTemp, windTemp; //DAV pasti ga akan ditampilin di text view sini kan? variable itu bisa buat assign ke database/ pass ke activity main, dll sesuai kebutuhan
 
@@ -96,6 +99,10 @@ public class chooseLocation extends AppCompatActivity {
     }
 
     private void getData(String param) throws UnsupportedEncodingException { //DAV ini fungsi utk get data
+        progressDialog = new ProgressDialog(chooseLocation.this) ;
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Getting data...");
+        progressDialog.show();
         AsyncHttpClient client = new AsyncHttpClient();
         String finalUrl = url1 + param; //DAV final url. Antara url1+ &q=namakota atau url1 + &lon=blabla&lat=blabla
         finalUrl = URLEncoder.encode(url1 + param, "UTF-8"); //DAV encode biar pencariannya lebih cepet
@@ -124,10 +131,25 @@ public class chooseLocation extends AppCompatActivity {
                     //DAV engga perlu intent
                     //Intent i = new Intent(getApplicationContext(), MainActivity.class); //DAV pindah
                     //startActivity(i); //DAV try itu synchronous, jadi dia bakal ngejalanin koding di luar try dulu, baru di dalem. Databasenya keupdate dengan benar, hanya saja intentnya yang jalan duluan baru updatenya
+                    if(progressDialog.isShowing()){
+                        progressDialog.dismiss();
+                    }
                     finish();
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    if(progressDialog.isShowing()){
+                        progressDialog.dismiss();
+                    }
                 }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                if(progressDialog.isShowing()){
+                    progressDialog.dismiss();
+                }
+                Toast.makeText(chooseLocation.this, "Failed to get data!", Toast.LENGTH_SHORT).show();
             }
         });
     }

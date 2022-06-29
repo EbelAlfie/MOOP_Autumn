@@ -1,11 +1,13 @@
 package com.example.autumn_finalproject;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -99,6 +101,10 @@ public class AddAlert extends AppCompatActivity {
     }
 
     private void getData(String param, int cnt) throws UnsupportedEncodingException { //DAV ini fungsi utk get data
+        ProgressDialog progressDialog = new ProgressDialog(AddAlert.this) ;
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Getting data...");
+        progressDialog.show();
         AsyncHttpClient client = new AsyncHttpClient();
         String finalUrl = URLEncoder.encode(url1 + param, "UTF-8"); //DAV encode biar pencariannya lebih cepet
         client.get(finalUrl, new JsonHttpResponseHandler() { //DAV make a request
@@ -107,7 +113,7 @@ public class AddAlert extends AppCompatActivity {
                 try {
                     //DAV masukin seluruh data yang dibutuhkan ke variabel. Kalau2 mau di assign ke database, dll sesuai kebutuhan
                     cityTemp = response.getJSONObject("city").getString("name");
-                    System.out.println(cityTemp);
+                    //System.out.println(cityTemp);
                     weatherTemp = response.getJSONArray("list").getJSONObject(cnt-1).getJSONArray("weather").getJSONObject(0).getString("description");
                     weatherTemp = toTitleCase(weatherTemp); //Title case Weather
                     temperatureTemp = response.getJSONArray("list").getJSONObject(cnt-1).getJSONObject("main").optString("temp") + "°C"; //current temp add °C
@@ -120,12 +126,27 @@ public class AddAlert extends AppCompatActivity {
 
                     //DAV engga perlu intent
                     //Intent i = new Intent(getApplicationContext(), MainActivity.class); //DAV pindah
-                    System.out.println(cityTemp);
+                    //System.out.println(cityTemp);
                     //startActivity(i); //DAV pindah
+                    if(progressDialog.isShowing()){
+                        progressDialog.dismiss();
+                    }
                     finish();//DAV biar activity ga kebanyakan
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    e.printStackTrace(); //TODO: DI sini error kalau input location: England dan days ahead: 7
+                    if(progressDialog.isShowing()){
+                        progressDialog.dismiss();
+                    }
                 }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                if(progressDialog.isShowing()){
+                    progressDialog.dismiss();
+                }
+                Toast.makeText(AddAlert.this, "Failed to get data!", Toast.LENGTH_SHORT).show();
             }
         });
     }
