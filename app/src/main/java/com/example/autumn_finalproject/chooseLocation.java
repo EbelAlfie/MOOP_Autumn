@@ -27,8 +27,8 @@ public class chooseLocation extends AppCompatActivity {
 
     EditText inputLocation;
     Button chooseLoc, getLoc;
-    TextView city, weather, temper, humid, wind;
-    TextView txt_lat, txt_lon;
+    //TextView city, weather, temper, humid, wind;
+    //TextView txt_lat, txt_lon;
     private DBHandler dbHandler;
     GpsTracker gpsTracker;
     ProgressDialog progressDialog ;
@@ -80,18 +80,34 @@ public class chooseLocation extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    String lat = getLocs(1); //DAV asign getLocs lat
-                    if(!lat.equals("0")) {
+                    gpsTracker = new GpsTracker(chooseLocation.this);
+                    if (gpsTracker.canGetLocation()) {
+                        progressDialog = new ProgressDialog(chooseLocation.this) ;
+                        progressDialog.setCancelable(false);
+                        progressDialog.setMessage("Getting data...");
+                        progressDialog.show();
+                        Thread.sleep(2000); //Ada bug kalau input kecepetan, maka outputnya Globe. jadi gw pake delay
+                        String lat = getLocs(1); //DAV asign getLocs lat
                         String lon = getLocs(2); //DAV asign getLocs lon
-//                  txt_lat.setText(lat);
-//                  txt_lon.setText(lon);
+    //                  txt_lat.setText(lat);
+    //                  txt_lon.setText(lon);
 
                         String param = "&lon=" + lon + "&lat=" + lat; //DAV parameternya longitude dan latitude. jadi url+ param juga
 
                         getData(param);//DAV untuk fetch data based on lon and lat
+                    }else{
+                        gpsTracker.showSettingsAlert();
                     }
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
+                    if(progressDialog.isShowing()){
+                        progressDialog.dismiss();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    if(progressDialog.isShowing()){
+                        progressDialog.dismiss();
+                    }
                 }
 
             }
@@ -99,13 +115,8 @@ public class chooseLocation extends AppCompatActivity {
     }
 
     private void getData(String param) throws UnsupportedEncodingException { //DAV ini fungsi utk get data
-        progressDialog = new ProgressDialog(chooseLocation.this) ;
-        progressDialog.setCancelable(false);
-        progressDialog.setMessage("Getting data...");
-        progressDialog.show();
         AsyncHttpClient client = new AsyncHttpClient();
-        String finalUrl = url1 + param; //DAV final url. Antara url1+ &q=namakota atau url1 + &lon=blabla&lat=blabla
-        finalUrl = URLEncoder.encode(url1 + param, "UTF-8"); //DAV encode biar pencariannya lebih cepet
+        String finalUrl = URLEncoder.encode(url1 + param, "UTF-8"); //DAV encode biar pencariannya lebih cepet
         client.get(finalUrl, new JsonHttpResponseHandler() { //DAV make a request
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) { //DAV kalau success, get datanya berdasarkan parameter response bentuk JSONObject
@@ -129,8 +140,6 @@ public class chooseLocation extends AppCompatActivity {
                     dbHandler.updateWeather(1, cityTemp, weatherTemp, temperatureTemp, humidityTemp, windTemp); //Update DB after API request
 
                     //DAV engga perlu intent
-                    //Intent i = new Intent(getApplicationContext(), MainActivity.class); //DAV pindah
-                    //startActivity(i); //DAV try itu synchronous, jadi dia bakal ngejalanin koding di luar try dulu, baru di dalem. Databasenya keupdate dengan benar, hanya saja intentnya yang jalan duluan baru updatenya
                     if(progressDialog.isShowing()){
                         progressDialog.dismiss();
                     }
