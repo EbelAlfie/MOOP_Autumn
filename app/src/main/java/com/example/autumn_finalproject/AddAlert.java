@@ -1,11 +1,11 @@
 package com.example.autumn_finalproject;
 
-import android.content.Intent;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -25,6 +25,7 @@ public class AddAlert extends AppCompatActivity {
     Button chooseLoc, getLoc;
     private AlertDBHandler dbHandler;
     GpsTracker gpsTracker;
+    ProgressDialog progressDialog ;
 
     private String cityTemp, weatherTemp, temperatureTemp, humidityTemp, windTemp; //DAV pasti ga akan ditampilin di text view sini kan? variable itu bisa buat assign ke database/ pass ke activity main, dll sesuai kebutuhan
 
@@ -52,6 +53,11 @@ public class AddAlert extends AppCompatActivity {
         chooseLoc.setOnClickListener(new View.OnClickListener() { //Get Weather With City Name
             @Override
             public void onClick(View view) {
+                progressDialog = new ProgressDialog(AddAlert.this) ;
+                progressDialog.setCancelable(false);
+                progressDialog.setMessage("Getting data...");
+                progressDialog.show();
+
                 String query = String.valueOf(inputLocation.getText());
                 String cnt;
                 if(!String.valueOf(inputTime.getText()).equals("")){ //TODO: DAV (highlight aja) kondisinya gw ganti ya ngab
@@ -66,6 +72,9 @@ public class AddAlert extends AppCompatActivity {
                     getData(param, Integer.parseInt(cnt)); //DAV fetch JSON data based on url + param (paramnya aja soalnya cuman itu yang beda)
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
+                    if(progressDialog.isShowing()){
+                        progressDialog.dismiss();
+                    }
                 }
             }
         });
@@ -73,25 +82,44 @@ public class AddAlert extends AppCompatActivity {
         getLoc.setOnClickListener(new View.OnClickListener() { //Get Weather with current location
             @Override
             public void onClick(View view) {
-                String lat = getLocs(1); //DAV asign getLocs lat
-                if (!lat.equals("0")) {
-                    String lon = getLocs(2); //DAV asign getLocs lon
-                    String cnt;
-                    if (!String.valueOf(inputTime.getText()).equals("")) {
-                        cnt = String.valueOf(inputTime.getText());
-                        int cnt_n = Integer.valueOf(cnt) * 6;
-                        cnt = String.valueOf(cnt_n);
-                    } else {
-                        cnt = "6";
-                    }
-                    try {
+                try {
+                    gpsTracker = new GpsTracker(AddAlert.this);
+                    if (gpsTracker.canGetLocation()) {
+                        progressDialog = new ProgressDialog(AddAlert.this) ;
+                        progressDialog.setCancelable(false);
+                        progressDialog.setMessage("Getting data...");
+                        progressDialog.show();
+
+                        Thread.sleep(2000) ;//Masih ngebug sih kalau input terlalu cepet
+                        //menurut gw harus set delay di sini. Kalau kecepetan klik "Get location" waktu gps baru nyala, datanya ga akan dapet.
+                        String lat = getLocs(1); //DAV asign getLocs lat
+                        String lon = getLocs(2); //DAV asign getLocs lon
+                        String cnt;
+                        if (!String.valueOf(inputTime.getText()).equals("")) {
+                            cnt = String.valueOf(inputTime.getText());
+                            int cnt_n = Integer.valueOf(cnt) * 6;
+                            cnt = String.valueOf(cnt_n);
+                        } else {
+                            cnt = "6";
+                        }
+
                         String param = "&lon=" + lon + "&lat=" + lat + "&cnt=" + cnt; //DAV parameternya longitude dan latitude.
                         getData(param, Integer.parseInt(cnt));//DAV untuk fetch data based on lon and lat
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
                     //DAV Intentnya jangan di sini. Try itu synchronous, jadi segala statement di luar try bakal dijalanin duluan
                     //DAV databasenya sebetulnya keupdate, tapi keliatannya engga, karena intentnya yang dijalanin terlebih dahulu
+                    }else{
+                        gpsTracker.showSettingsAlert();
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    if(progressDialog.isShowing()){
+                        progressDialog.dismiss();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    if (progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
                 }
             }
         });
@@ -107,7 +135,7 @@ public class AddAlert extends AppCompatActivity {
                 try {
                     //DAV masukin seluruh data yang dibutuhkan ke variabel. Kalau2 mau di assign ke database, dll sesuai kebutuhan
                     cityTemp = response.getJSONObject("city").getString("name");
-                    System.out.println(cityTemp);
+                    //System.out.println(cityTemp);
                     weatherTemp = response.getJSONArray("list").getJSONObject(cnt-1).getJSONArray("weather").getJSONObject(0).getString("description");
                     weatherTemp = toTitleCase(weatherTemp); //Title case Weather
                     temperatureTemp = response.getJSONArray("list").getJSONObject(cnt-1).getJSONObject("main").optString("temp") + "°C"; //current temp add °C
@@ -119,13 +147,27 @@ public class AddAlert extends AppCompatActivity {
                     dbHandler.addNewAlert(time, cityTemp, weatherTemp, temperatureTemp, humidityTemp, windTemp); //Update DB after API request
 
                     //DAV engga perlu intent
-                    //Intent i = new Intent(getApplicationContext(), MainActivity.class); //DAV pindah
-                    System.out.println(cityTemp);
-                    //startActivity(i); //DAV pindah
+                    //System.out.println(cityTemp);
+                    if(progressDialog.isShowing()){
+                        progressDialog.dismiss();
+                    }
                     finish();//DAV biar activity ga kebanyakan
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    e.printStackTrace(); //TODO: DI sini error kalau input location: England dan days ahead: 7. 6 masih bisa
+                    Toast.makeText(AddAlert.this, "Reached maximum days ahead! Cannot fetch data", Toast.LENGTH_SHORT).show();
+                    if(progressDialog.isShowing()){
+                        progressDialog.dismiss();
+                    }
                 }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                if(progressDialog.isShowing()){
+                    progressDialog.dismiss();
+                }
+                Toast.makeText(AddAlert.this, "Failed to get data!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -133,7 +175,6 @@ public class AddAlert extends AppCompatActivity {
     public String getLocs(int ID) { //ID  1 = lat, ID 2 = lon
         String t_lat = "0";
         String t_lon = "0";
-        gpsTracker = new GpsTracker(AddAlert.this);
         if (gpsTracker.canGetLocation()) {
             double latitude = gpsTracker.getLatitude();
             double longitude = gpsTracker.getLongitude();
